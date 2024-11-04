@@ -1,6 +1,30 @@
-<html>
-   <head></head>
-   <body>
-      <h1>Hello Vercel</h1>
-   </body>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Vercel Site</title>
+</head>
+
+<body>
+   <h1>Vercel Site</h1>
+   <button id="trigger-button">Get Data from GitHub Iframe</button>
+   <iframe id="netlify-iframe" src="https://iframe-netlify-test.netlify.app" width="600" height="400"></iframe>
+
+   <script>
+      const netlifyIframe = document.getElementById('netlify-iframe');
+      document.getElementById('trigger-button').addEventListener('click', () => {
+         // Send message to Netlify iframe
+         netlifyIframe.contentWindow.postMessage({ action: 'request-data' }, 'https://iframe-netlify-test.netlify.app');
+      });
+
+      window.addEventListener('message', (event) => {
+         if (event.origin === 'https://iframe-netlify-test.netlify.app') {
+            console.log('Data received from GitHub iframe:', event.data);
+         }
+      });
+   </script>
+</body>
+
 </html>
