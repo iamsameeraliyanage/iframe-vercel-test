@@ -5,30 +5,44 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Vercel Site</title>
+   <!-- Content Security Policy (CSP) to restrict resources and iframes -->
+   <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; frame-src https://iframe-netlify-test.netlify.app;">
 </head>
 
 <body>
-   <div>
-      <h1>Vercel Site</h1>
-   </div>
-   <div style="margin-bottom: 50px;">
-      <button id="trigger-button">Get Data from GitHub Iframe</button>
-   </div>
+   <h1>Vercel Site</h1>
+   <button id="trigger-button">Get Data from GitHub Iframe</button>
 
-   <iframe id="netlify-iframe" src="https://iframe-netlify-test.netlify.app" width="600" height="400"></iframe>
+   <!-- Netlify iframe with sandbox attribute to limit permissions -->
+   <iframe id="netlify-iframe" src="https://iframe-netlify-test.netlify.app" width="600" height="400"
+      sandbox="allow-scripts allow-same-origin"></iframe>
 
    <script>
       const netlifyIframe = document.getElementById('netlify-iframe');
-      document.getElementById('trigger-button').addEventListener('click', () => {
-         // Send message to Netlify iframe
-         netlifyIframe.contentWindow.postMessage({ action: 'request-data' }, 'https://iframe-netlify-test.netlify.app');
-      });
 
-      window.addEventListener('message', (event) => {
-         if (event.origin === 'https://iframe-netlify-test.netlify.app') {
-            console.log('Data received from GitHub iframe:', event.data);
+      document.getElementById('trigger-button').addEventListener('click', () => {
+         try {
+            // Send message to Netlify iframe with specified target origin
+            netlifyIframe.contentWindow.postMessage(
+               { action: 'request-data' },
+               'https://iframe-netlify-test.netlify.app'
+            );
+         } catch (error) {
+            console.error("Failed to send message to Netlify iframe:", error);
          }
       });
+
+      // Listen for messages from Netlify iframe
+      window.addEventListener('message', (event) => {
+         // Verify origin to ensure message is from a trusted source
+         if (event.origin === 'https://iframe-netlify-test.netlify.app') {
+            console.log('Data received from GitHub iframe:', event.data);
+         } else {
+            console.warn("Untrusted message origin:", event.origin);
+         }
+      });
+
    </script>
 </body>
 
