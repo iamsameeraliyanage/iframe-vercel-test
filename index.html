@@ -4,68 +4,21 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Vercel Site - User Side</title>
-   <!-- CSP with nonce to allow inline scripts only if they have the correct nonce -->
+   <title>Vercel Site</title>
+   <!-- Content Security Policy (CSP) to restrict resources and iframes -->
    <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'nonce-abc123'; frame-src https://iframe-netlify-test.netlify.app;">
+      content="default-src 'self'; frame-src https://iframe-netlify-test.netlify.app;">
 </head>
 
 <body>
-   <h1>Vercel Site - User Side</h1>
+   <h1>Vercel Site</h1>
    <button id="trigger-button">Get Data from GitHub Iframe</button>
 
-   <!-- Communication Log -->
-   <div id="communication-log">
-      <h3>Communication Log:</h3>
-      <ul id="log"></ul>
-   </div>
-
-   <!-- Netlify iframe for Payment API -->
+   <!-- Netlify iframe with sandbox attribute to limit permissions -->
    <iframe id="netlify-iframe" src="https://iframe-netlify-test.netlify.app" width="600" height="400"
       sandbox="allow-scripts allow-same-origin"></iframe>
 
-   <script nonce="abc123">
-      const netlifyIframe = document.getElementById('netlify-iframe');
-      const log = document.getElementById('log');
-
-      function generateId(prefix) {
-         return `${prefix}-${Math.random().toString(36).substr(2, 10)}`;
-      }
-
-      document.getElementById('trigger-button').addEventListener('click', () => {
-         const paymentData = {
-            action: 'request-data',
-            message: 'Payment initiated',
-            data: {
-               amount: 100,
-               currency: 'USD',
-               orderId: generateId('ORD')
-            }
-         };
-
-         logMessage(`Sent: ${JSON.stringify(paymentData)}`);
-
-         try {
-            netlifyIframe.contentWindow.postMessage(paymentData, 'https://iframe-netlify-test.netlify.app');
-         } catch (error) {
-            logMessage(`Error sending message to Netlify iframe: ${error}`);
-         }
-      });
-
-      window.addEventListener('message', (event) => {
-         if (event.origin === 'https://iframe-netlify-test.netlify.app') {
-            logMessage(`Received: ${JSON.stringify(event.data)}`);
-         } else {
-            console.warn("Untrusted message origin:", event.origin);
-         }
-      });
-
-      function logMessage(message) {
-         const item = document.createElement('li');
-         item.textContent = message;
-         log.appendChild(item);
-      }
-   </script>
+   <script src="script.js"></script>
 </body>
 
 </html>
