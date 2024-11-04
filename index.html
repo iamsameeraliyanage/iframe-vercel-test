@@ -4,45 +4,68 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Vercel Site</title>
-   <!-- Content Security Policy (CSP) to restrict resources and iframes -->
+   <title>Vercel Site - User Side</title>
    <meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; frame-src https://iframe-netlify-test.netlify.app;">
 </head>
 
 <body>
-   <h1>Vercel Site</h1>
+   <h1>Vercel Site - User Side</h1>
    <button id="trigger-button">Get Data from GitHub Iframe</button>
 
-   <!-- Netlify iframe with sandbox attribute to limit permissions -->
+   <!-- Communication Log -->
+   <div id="communication-log">
+      <h3>Communication Log:</h3>
+      <ul id="log"></ul>
+   </div>
+
+   <!-- Netlify iframe for Payment API -->
    <iframe id="netlify-iframe" src="https://iframe-netlify-test.netlify.app" width="600" height="400"
       sandbox="allow-scripts allow-same-origin"></iframe>
 
    <script>
       const netlifyIframe = document.getElementById('netlify-iframe');
+      const log = document.getElementById('log');
+
+      // Utility function to generate random ID
+      function generateId(prefix) {
+         return `${prefix}-${Math.random().toString(36).substr(2, 10)}`;
+      }
 
       document.getElementById('trigger-button').addEventListener('click', () => {
+         const paymentData = {
+            action: 'request-data',
+            message: 'Payment initiated',
+            data: {
+               amount: 100,
+               currency: 'USD',
+               orderId: generateId('ORD')
+            }
+         };
+
+         // Log the payment initiation
+         logMessage(`Sent: ${JSON.stringify(paymentData)}`);
+
          try {
-            // Send message to Netlify iframe with specified target origin
-            netlifyIframe.contentWindow.postMessage(
-               { action: 'request-data' },
-               'https://iframe-netlify-test.netlify.app'
-            );
+            netlifyIframe.contentWindow.postMessage(paymentData, 'https://iframe-netlify-test.netlify.app');
          } catch (error) {
-            console.error("Failed to send message to Netlify iframe:", error);
+            logMessage(`Error sending message to Netlify iframe: ${error}`);
          }
       });
 
-      // Listen for messages from Netlify iframe
       window.addEventListener('message', (event) => {
-         // Verify origin to ensure message is from a trusted source
          if (event.origin === 'https://iframe-netlify-test.netlify.app') {
-            console.log('Data received from GitHub iframe:', event.data);
+            logMessage(`Received: ${JSON.stringify(event.data)}`);
          } else {
             console.warn("Untrusted message origin:", event.origin);
          }
       });
 
+      function logMessage(message) {
+         const item = document.createElement('li');
+         item.textContent = message;
+         log.appendChild(item);
+      }
    </script>
 </body>
 
