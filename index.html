@@ -5,8 +5,9 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Vercel Site - User Side</title>
+   <!-- CSP with nonce to allow inline scripts only if they have the correct nonce -->
    <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; frame-src https://iframe-netlify-test.netlify.app;">
+      content="default-src 'self'; script-src 'self' 'nonce-abc123'; frame-src https://iframe-netlify-test.netlify.app;">
 </head>
 
 <body>
@@ -23,11 +24,10 @@
    <iframe id="netlify-iframe" src="https://iframe-netlify-test.netlify.app" width="600" height="400"
       sandbox="allow-scripts allow-same-origin"></iframe>
 
-   <script>
+   <script nonce="abc123">
       const netlifyIframe = document.getElementById('netlify-iframe');
       const log = document.getElementById('log');
 
-      // Utility function to generate random ID
       function generateId(prefix) {
          return `${prefix}-${Math.random().toString(36).substr(2, 10)}`;
       }
@@ -43,7 +43,6 @@
             }
          };
 
-         // Log the payment initiation
          logMessage(`Sent: ${JSON.stringify(paymentData)}`);
 
          try {
