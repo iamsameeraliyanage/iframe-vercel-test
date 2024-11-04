@@ -5,7 +5,6 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Vercel Site</title>
-   <!-- Content Security Policy (CSP) to restrict resources and iframes -->
    <meta http-equiv="Content-Security-Policy"
       content="default-src 'self'; frame-src https://iframe-netlify-test.netlify.app;">
 </head>
@@ -13,8 +12,8 @@
 <body>
    <h1>Vercel Site</h1>
    <button id="trigger-button">Get Data from GitHub Iframe</button>
+   <div id="communication-log">Communication Log:</div>
 
-   <!-- Netlify iframe with sandbox attribute to limit permissions -->
    <iframe id="netlify-iframe" src="https://iframe-netlify-test.netlify.app" width="600" height="400"
       sandbox="allow-scripts allow-same-origin"></iframe>
 
