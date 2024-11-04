@@ -11,7 +11,7 @@ document.getElementById('trigger-button').addEventListener('click', () => {
     };
 
     // Log the payment initiation
-    communicationLog.innerHTML += `<br>Payment initiated: ${JSON.stringify(paymentData)}`;
+    communicationLog.innerHTML += `<br>Vercel: Payment initiated: ${JSON.stringify(paymentData)}`;
 
     // Send message to Netlify iframe with payment data
     try {
@@ -27,7 +27,7 @@ document.getElementById('trigger-button').addEventListener('click', () => {
 // Listen for messages from Netlify iframe
 window.addEventListener('message', (event) => {
     if (event.origin === 'https://iframe-netlify-test.netlify.app') {
-        communicationLog.innerHTML += `<br>Payment status received: ${JSON.stringify(event.data)}`;
+        communicationLog.innerHTML += `<br>Vercel: Payment status received: ${JSON.stringify(event.data)}`;
     } else {
         console.warn("Untrusted message origin:", event.origin);
     }
