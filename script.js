@@ -13,15 +13,17 @@ document.getElementById('trigger-button').addEventListener('click', () => {
     // Log the payment initiation
     communicationLog.innerHTML += `<br>Vercel: Payment initiated: ${JSON.stringify(paymentData)}`;
 
-    // Send message to Netlify iframe with payment data
-    try {
-        netlifyIframe.contentWindow.postMessage(
-            { action: 'initiate-payment', data: paymentData }, 
-            'https://iframe-netlify-test.netlify.app'
-        );
-    } catch (error) {
-        console.error("Failed to send message to Netlify iframe:", error);
-    }
+    // Send message to Netlify iframe with payment data after 5 seconds
+    setTimeout(() => {
+        try {
+            netlifyIframe.contentWindow.postMessage(
+                { action: 'initiate-payment', data: paymentData }, 
+                'https://iframe-netlify-test.netlify.app'
+            );
+        } catch (error) {
+            console.error("Failed to send message to Netlify iframe:", error);
+        }
+    }, 5000);
 });
 
 // Listen for messages from Netlify iframe
